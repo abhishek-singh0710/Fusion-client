@@ -3,24 +3,23 @@ import { useSelector } from "react-redux";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import axios from "axios";
-import ProjectsMaster from "../Profile/Projects/ProjectMaster";
-import ThesisSupervisionMaster from "../Profile/ThesisSupervision/ThesisSupervisionMaster";
-import EventMaster from "../Profile/EventsOrganised/EventMaster";
-import VisitsMaster from "../Profile/Visits/VisitsMaster";
-import ConferenceMaster from "../Profile/Conference/ConferenceMaster";
-import PublicationMaster from "../Profile/Publications/PublicationsMaster";
-import OtherMaster from "../Profile/Others/OtherMaster";
-import MyProfileMaster from "../Profile/MyProfile/MyProfileMaster";
+// import ProjectsMaster from "../Profile/Projects/ProjectMaster";
+// import ThesisSupervisionMaster from "../Profile/ThesisSupervision/ThesisSupervisionMaster";
+// import EventMaster from "../Profile/EventsOrganised/EventMaster";
+// import VisitsMaster from "../Profile/Visits/VisitsMaster";
+// import ConferenceMaster from "../Profile/Conference/ConferenceMaster";
+// import PublicationMaster from "../Profile/Publications/PublicationsMaster";
+// import OtherMaster from "../Profile/Others/OtherMaster";
+// import MyProfileMaster from "../Profile/MyProfile/MyProfileMaster";
 import classes from "../../Dashboard/Dashboard.module.css";
 // import AboutMePage from "../Profile/AboutMe/AboutMe";
 import CustomBreadcrumbs from "../../../components/Breadcrumbs";
-// import AdministrativePosition from "../Profile/AdministrativePosition/AdministrativePosition";
-// import Qualifications from "../Profile/Qualifications/Qualifications";
+import AdministrativePosition from "../Profile/AdministrativePosition/AdministrativePosition";
+import Qualifications from "../Profile/Qualifications/Qualifications";
 // import Honors from "../Profile/Honors/Honors";
-// import ProfessionalExperience from "../Profile/ProfessionalExperience/ProfessionalExperience";
-import ExpertLecturesForm from "../Profile/Others/ExpertLectures";
+import ProfessionalExperience from "../Profile/ProfessionalExperience/ProfessionalExperience";
 
-function ProfileButtons() {
+function AdministrativeProfileButtons() {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
   const [breadCrumbItems, setBreadCrumbItems] = useState([]);
@@ -44,136 +43,38 @@ function ProfileButtons() {
 
     return [
       {
-        title: "Publications",
+        title: "Administrative Position",
         component: (
-          <PublicationMaster
+          <AdministrativePosition
             breadCrumbItems={breadCrumbItems}
             setBreadCrumbItems={setBreadCrumbItems}
           />
         ),
       },
       {
-        title: "Projects",
+        title: "Qualifications",
         component: (
-          <ProjectsMaster
+          <Qualifications
             breadCrumbItems={breadCrumbItems}
             setBreadCrumbItems={setBreadCrumbItems}
           />
         ),
       },
       {
-        title: "Thesis Supervision",
+        title: "Professional Experience",
         component: (
-          <ThesisSupervisionMaster
+          <ProfessionalExperience
             breadCrumbItems={breadCrumbItems}
             setBreadCrumbItems={setBreadCrumbItems}
           />
         ),
       },
-      {
-        title: "Events Organised",
-        component: (
-          <EventMaster
-            breadCrumbItems={breadCrumbItems}
-            setBreadCrumbItems={setBreadCrumbItems}
-          />
-        ),
-      },
-      {
-        title: "Visits",
-        component: (
-          <VisitsMaster
-            breadCrumbItems={breadCrumbItems}
-            setBreadCrumbItems={setBreadCrumbItems}
-          />
-        ),
-      },
-      {
-        title: "Events Attended",
-        component: (
-          <ConferenceMaster
-            breadCrumbItems={breadCrumbItems}
-            setBreadCrumbItems={setBreadCrumbItems}
-          />
-        ),
-      },
-      {
-        title: "Others",
-        component: (
-          <OtherMaster
-            breadCrumbItems={breadCrumbItems}
-            setBreadCrumbItems={setBreadCrumbItems}
-          />
-        ),
-      },
-      // {
-      //   title: "Honors",
-      //   component: (
-      //     <Honors
-      //       breadCrumbItems={breadCrumbItems}
-      //       setBreadCrumbItems={setBreadCrumbItems}
-      //     />
-      //   ),
-      // },
-      {
-        title: "Expert Lectures",
-        component: (
-          <ExpertLecturesForm
-            breadCrumbItems={breadCrumbItems}
-            setBreadCrumbItems={setBreadCrumbItems}
-          />
-        ),
-      },
-      {
-        title: "My Profile",
-        component: (
-          <MyProfileMaster
-            breadCrumbItems={breadCrumbItems}
-            setBreadCrumbItems={setBreadCrumbItems}
-          />
-        ),
-      },
-
-      // {
-      //   title: "Administrative Position",
-      //   component: (
-      //     <AdministrativePosition
-      //       breadCrumbItems={breadCrumbItems}
-      //       setBreadCrumbItems={setBreadCrumbItems}
-      //     />
-      //   ),
-      // },
-      // {
-      //   title: "Qualifications",
-      //   component: (
-      //     <Qualifications
-      //       breadCrumbItems={breadCrumbItems}
-      //       setBreadCrumbItems={setBreadCrumbItems}
-      //     />
-      //   ),
-      // },
-      // {
-      //   title: "Honors",
-      //   component: (
-      //     <Honors
-      //       breadCrumbItems={breadCrumbItems}
-      //       setBreadCrumbItems={setBreadCrumbItems}
-      //     />
-      //   ),
-      // },
-      // {
-      //   title: "Professional Experience",
-      //   component: (
-      //     <ProfessionalExperience
-      //       breadCrumbItems={breadCrumbItems}
-      //       setBreadCrumbItems={setBreadCrumbItems}
-      //     />
-      //   ),
-      // },
     ];
   };
 
   const tabItems = getTabItems();
+
+  console.log("tab items from ad profile=", tabItems);
 
   // Handle tab change (previous/next)
   const handleTabChange = (direction) => {
@@ -309,4 +210,4 @@ function ProfileButtons() {
   ) : null;
 }
 
-export default ProfileButtons;
+export default AdministrativeProfileButtons;
