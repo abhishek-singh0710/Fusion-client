@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    name: "",
     username: "User",
     roll_no: "",
     roles: ["Guest-User"],
@@ -13,6 +14,9 @@ const userSlice = createSlice({
   reducers: {
     setUserName: (state, action) => {
       state.username = action.payload;
+    },
+    setName: (state, action) => {
+      state.name = action.payload;
     },
     setRollNo: (state, action) => {
       state.roll_no = action.payload;
@@ -41,6 +45,7 @@ const userSlice = createSlice({
 
 export const {
   setUserName,
+  setName,
   setRollNo,
   setRoles,
   setRole,
