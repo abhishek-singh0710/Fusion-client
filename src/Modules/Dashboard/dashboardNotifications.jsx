@@ -16,6 +16,7 @@ import {
   CloseButton,
 } from "@mantine/core";
 import { useDispatch } from "react-redux";
+import { setTotalNotifications } from "../../redux/userslice.jsx";
 import classes from "./Dashboard.module.css";
 import { Empty } from "../../components/empty";
 import CustomBreadcrumbs from "../../components/Breadcrumbs.jsx";
@@ -110,6 +111,9 @@ function Dashboard() {
     (n) => !n.deleted && n.unread,
   ).length;
   const badges = [notificationBadgeCount, announcementBadgeCount];
+  dispatch(
+    setTotalNotifications(notificationBadgeCount + announcementBadgeCount),
+  );
 
   useEffect(() => {
     const fetchDashboardData = async () => {

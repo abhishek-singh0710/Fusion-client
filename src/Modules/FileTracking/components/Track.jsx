@@ -22,7 +22,7 @@ export default function Track() {
   const [selectedFile, setSelectedFile] = useState(null);
   const token = localStorage.getItem("authToken");
   const role = useSelector((state) => state.user.role);
-  const username = useSelector((state) => state.user.name);
+  const username = useSelector((state) => state.user.roll_no);
   let current_module = useSelector((state) => state.module.current_module);
   current_module = current_module.split(" ").join("").toLowerCase();
 
@@ -253,7 +253,20 @@ export default function Track() {
         }
       `}</style>
 
-      <Card className="track-card">
+      <Card
+        shadow="sm"
+        padding="lg"
+        radius="md"
+        withBorder
+        style={{
+          backgroundColor: "#F5F7F8",
+          position: "absolute",
+          height: "70vh",
+          width: "90vw",
+          overflowY: "auto",
+        }}
+        className="track-card"
+      >
         {!selectedFile && (
           <Title order={2} mb="md" className="main-title">
             Track Files

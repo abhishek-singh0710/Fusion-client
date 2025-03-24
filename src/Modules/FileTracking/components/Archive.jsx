@@ -13,7 +13,7 @@ export default function ArchiveFiles() {
   const [files, setFiles] = useState([]);
   const token = localStorage.getItem("authToken");
   const role = useSelector((state) => state.user.role);
-  const username = useSelector((state) => state.user.name);
+  const username = useSelector((state) => state.user.roll_no);
   let current_module = useSelector((state) => state.module.current_module);
   current_module = current_module.split(" ").join("").toLowerCase();
   useEffect(() => {
@@ -93,7 +93,13 @@ export default function ArchiveFiles() {
       padding="lg"
       radius="md"
       withBorder
-      style={{ backgroundColor: "#F5F7F8", maxWidth: "100%" }}
+      style={{
+        backgroundColor: "#F5F7F8",
+        position: "absolute",
+        height: "70vh",
+        width: "90vw",
+        overflowY: "auto",
+      }}
     >
       {!selectedFile && (
         <Title

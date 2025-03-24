@@ -22,6 +22,7 @@ import {
   designationsRoute,
   createFileRoute,
   getUsernameRoute,
+  createDraftRoute,
 } from "../../../routes/filetrackingRoutes";
 
 axios.defaults.withCredentials = true;
@@ -35,6 +36,7 @@ export default function Compose() {
   const [subject, setSubject] = React.useState("");
   const [description, setDescription] = React.useState("");
   const token = localStorage.getItem("authToken");
+
   const roles = useSelector((state) => state.user.roles);
   let module = useSelector((state) => state.module.current_module);
   module = module.split(" ").join("").toLowerCase();
@@ -112,31 +114,45 @@ export default function Compose() {
         },
       },
     );
+    console.log(response);
     setReceiverDesignations(response.data.designations);
   };
-
+  useEffect(() => {
+    if (receiver_username) {
+      fetchRoles();
+    }
+  }, [receiver_username]);
   const handleSaveDraft = async () => {
-    // const response = await axios.post(
-    //   `${draftRoute}`,
-    //   {
-    //     designation: uploaderRole,
-    //     src_module: module,
-    //     file,
-    //   },
-    //   {
-    //     headers: {
-    //       Authorization: `Token ${token}`,
-    //     },
-    //   },
-    // );
-    notifications.show({
-      title: "Draft saved successfully",
-      message: "The draft has been saved successfully.",
-      color: "green",
-      position: "top-center",
-    });
-    postSubmit();
+    try {
+      console.log(uploaderRole);
+      console.log(module);
+      console.log(typeof files);
+      const formData = new FormData();
+      formData.append("designation", uploaderRole);
+      formData.append("src_module", module);
+
+      files.forEach((file) => {
+        formData.append("files", file); // `files` should be an array of File objects
+      });
+      // eslint-disable-next-line no-unused-vars
+      const response = await axios.post(`${createDraftRoute}`, formData, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      notifications.show({
+        title: "Draft saved successfully",
+        message: "The draft has been saved successfully.",
+        color: "green",
+        position: "top-center",
+      });
+      postSubmit();
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // postSubmit();
   const handleCreateFile = async () => {
     if (!files) {
       notifications.show({
@@ -178,7 +194,7 @@ export default function Compose() {
           color: "green",
           position: "top-center",
         });
-        // postSubmit();
+        postSubmit();
       }
     } catch (err) {
       console.log(err);
@@ -191,7 +207,14 @@ export default function Compose() {
       padding="lg"
       radius="md"
       withBorder
-      style={{ backgroundColor: "#F5F7F8", position: "relative" }}
+      className="inbox-card"
+      style={{
+        backgroundColor: "#F5F7F8",
+        position: "absolute",
+        height: "70vh",
+        width: "90vw",
+        overflowY: "auto",
+      }}
     >
       <Box
         style={{
@@ -298,10 +321,16 @@ export default function Compose() {
             <Select
               label="Receiver Designation"
               placeholder="Select designation"
-              onClick={() => fetchRoles()}
-              value={receiver_designation}
-              data={receiverRoles}
+              onClick={() => {
+                if (receiverRoles.length === 0) {
+                  fetchRoles();
+                }
+              }}
+              value={receiver_designation} // Use receiver_designation (string)
+              data={receiverRoles} // Ensure this is populated correctly
               onChange={(value) => setReceiverDesignation(value)}
+              searchable // Allows searching for designations
+              nothingFound="No designations found"
             />
           </Grid.Col>
         </Grid>

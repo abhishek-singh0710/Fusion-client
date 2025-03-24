@@ -62,6 +62,7 @@ export default function SectionNavigation() {
         spacing={0}
         style={{
           display: "flex",
+          overflowY: "auto",
           overflowX: "auto",
           padding: "8px",
           borderBottom: "2px solid #E2E8F0",
@@ -148,7 +149,7 @@ export default function SectionNavigation() {
         }}
       >
         {ActiveComponent ? (
-          <Box style={{ width: "100%", height: "100%", overflowY: "auto" }}>
+          <Box style={{ width: "100%", height: "100%", overflow: "auto" }}>
             <ActiveComponent />
           </Box>
         ) : (

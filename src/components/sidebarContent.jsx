@@ -39,131 +39,151 @@ import { useSelector, useDispatch } from "react-redux";
 import IIITLOGO from "../assets/IIITJ_logo.webp";
 import { setCurrentModule } from "../redux/moduleslice";
 
-const Modules = [
-  {
-    label: "Home",
-    id: "home",
-    icon: <HomeIcon size={18} />,
-    url: "/dashboard",
-  },
-  // { label: "Course Management", id:"course_management", icon: <OtherIcon size={18} />, url: "/" },
-  {
-    label: "Academics",
-    id: "course_registration",
-    icon: <AcademicsIcon size={18} />,
-    url: "/academics",
-  },
-  {
-    label: "Program & Curriculum",
-    id: "program_and_curriculum",
-    icon: <CurriculumIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Mess Management",
-    id: "mess_management",
-    icon: <MessIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Visitor's Hostel",
-    id: "visitor_hostel",
-    icon: <GuestIcon size={18} />,
-    url: "/visitors_hostel",
-  },
-  {
-    label: "HealthCare Center",
-    id: "phc",
-    icon: <HealthIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "File Tracking",
-    id: "fts",
-    icon: <FileTrackingIcon size={18} />,
-    url: "/filetracking",
-  },
-  {
-    label: "Scholarship Portal",
-    id: "spacs",
-    icon: <ScholarshipIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Complaint System",
-    id: "complaint_management",
-    icon: <ComplaintIcon size={18} />,
-    url: "/complaints",
-  },
-  {
-    label: "Placement Cell",
-    id: "placement_cell",
-    icon: <PlacementIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Department Portal",
-    id: "department",
-    icon: <DepartmentIcon size={18} />,
-    url: "/department",
-  },
-  { label: "Research", id: "rspc", icon: <ResearchIcon size={18} />, url: "/" },
-  {
-    label: "Purchase and Store",
-    id: "purchase_and_store",
-    icon: <StoreIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Human Resource",
-    id: "hr",
-    icon: <HumanResourceIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Examination",
-    id: "examinations",
-    icon: <ExamIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Gymkhana",
-    id: "gymkhana",
-    icon: <GymkhanaIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Institute Work Departments",
-    id: "iwd",
-    icon: <IWDIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Hostel Management",
-    id: "hostel_management",
-    icon: <HostelIcon size={18} />,
-    url: "/",
-  },
-  {
-    label: "Other Academic Procedure",
-    id: "other_academics",
-    icon: <OtherAcademicIcon size={18} />,
-    url: "/",
-  },
-];
-
-const otherItems = [
-  {
-    label: "Profile",
-    id: "profile",
-    icon: <ProfileIcon size={18} />,
-    url: "/profile",
-  },
-  { label: "Settings", icon: <SettingsIcon size={18} /> },
-  { label: "Help", icon: <HelpIcon size={18} /> },
-];
-
 function SidebarContent({ isCollapsed, toggleSidebar }) {
+  const role = useSelector((state) => state.user.role);
+
+  const deployedModules = [
+    "home",
+    "fts",
+    "complaint_management",
+    "mess_management",
+    "visitor_hostel",
+    "department",
+    "gymkhana",
+    "iwd",
+    "phc",
+    "spacs",
+  ];
+
+  const Modules = [
+    {
+      label: "Home",
+      id: "home",
+      icon: <HomeIcon size={18} />,
+      url: "/dashboard",
+    },
+    // { label: "Course Management", id:"course_management", icon: <OtherIcon size={18} />, url: "/" },
+    {
+      label: "Academics",
+      id: "course_registration",
+      icon: <AcademicsIcon size={18} />,
+      url: "/academics",
+    },
+    {
+      label: "Program & Curriculum",
+      id: "program_and_curriculum",
+      icon: <CurriculumIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Mess Management",
+      id: "mess_management",
+      icon: <MessIcon size={18} />,
+      url: "/mess",
+    },
+    {
+      label: "Visitor's Hostel",
+      id: "visitor_hostel",
+      icon: <GuestIcon size={18} />,
+      url: "/visitors_hostel",
+    },
+    {
+      label: "HealthCare Center",
+      id: "phc",
+      icon: <HealthIcon size={18} />,
+      url: "/healthcenter",
+    },
+    {
+      label: "File Tracking",
+      id: "fts",
+      icon: <FileTrackingIcon size={18} />,
+      url: "/filetracking",
+    },
+    {
+      label: "Scholarship Portal",
+      id: "spacs",
+      icon: <ScholarshipIcon size={18} />,
+      url: "/scholarship",
+    },
+    {
+      label: "Complaint System",
+      id: "complaint_management",
+      icon: <ComplaintIcon size={18} />,
+      url: "/complaints",
+    },
+    {
+      label: "Placement Cell",
+      id: "placement_cell",
+      icon: <PlacementIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Department Portal",
+      id: "department",
+      icon: <DepartmentIcon size={18} />,
+      url: "/department",
+    },
+    {
+      label: "Research",
+      id: "rspc",
+      icon: <ResearchIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Purchase and Store",
+      id: "purchase_and_store",
+      icon: <StoreIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Human Resource",
+      id: "hr",
+      icon: <HumanResourceIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Examination",
+      id: "examinations",
+      icon: <ExamIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Gymkhana",
+      id: "gymkhana",
+      icon: <GymkhanaIcon size={18} />,
+      url: "/GymKhana",
+    },
+    {
+      label: "Institute Work Departments",
+      id: "iwd",
+      icon: <IWDIcon size={18} />,
+      url: "/iwd",
+    },
+    {
+      label: "Hostel Management",
+      id: "hostel_management",
+      icon: <HostelIcon size={18} />,
+      url: "/",
+    },
+    {
+      label: "Other Academic Procedure",
+      id: "other_academics",
+      icon: <OtherAcademicIcon size={18} />,
+      url: "/",
+    },
+  ];
+
+  const otherItems = [
+    {
+      label: "Profile",
+      id: "profile",
+      icon: <ProfileIcon size={18} />,
+      url: role === "student" ? "/profile" : "/facultyprofessionalprofile",
+    },
+    { label: "Settings", icon: <SettingsIcon size={18} /> },
+    { label: "Help", icon: <HelpIcon size={18} /> },
+  ];
+
   const dispatch = useDispatch();
   const [hover, setHover] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -177,14 +197,26 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
     const filterModules = Modules.filter(
       (module) => accessibleModules[module.id] || module.id === "home",
     );
+
     setFilteredModules(filterModules);
   }, [accessibleModules]);
 
   const handleModuleClick = (item) => {
+    let path = item.url;
+
+    // HealthCare Center icon clicked navigation
+    if (item.id === "phc") {
+      if (role === "Compounder") {
+        path = "/healthcenter/compounder/patient-log";
+      } else if (role === "student" || role === "Professor") {
+        path = "/healthcenter/student/history";
+      }
+    }
+
     setSelected(item.label);
     toggleSidebar();
     dispatch(setCurrentModule(item.label));
-    navigate(item.url);
+    navigate(path);
   };
 
   return (
@@ -232,6 +264,7 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
               >
                 <Button
                   key={item.label}
+                  disabled={!deployedModules.includes(item.id)}
                   variant={
                     hover === item.label
                       ? "subtle"

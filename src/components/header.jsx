@@ -7,7 +7,6 @@ import {
   Avatar,
   Burger,
   Flex,
-  Indicator,
   Popover,
   Group,
   Stack,
@@ -15,7 +14,9 @@ import {
   Button,
   Select,
   Box,
+  Badge,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 // import { useQueryClient } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import { notifications } from "@mantine/notifications";
@@ -31,9 +32,12 @@ function Header({ opened, toggleSidebar }) {
   const username = useSelector((state) => state.user.username);
   const roles = useSelector((state) => state.user.roles);
   const role = useSelector((state) => state.user.role);
+  const badges = useSelector((state) => state.user.totalNotifications);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // const queryclient = useQueryClient();
+  const isMobile = useMediaQuery("(max-width: 500px)");
 
   const handleRoleChange = async (newRole) => {
     const token = localStorage.getItem("authToken");
@@ -140,9 +144,19 @@ function Header({ opened, toggleSidebar }) {
             onChange={handleRoleChange}
             placeholder="Role"
           />
-          <Indicator>
+          <Flex align="flex-start" onClick={() => navigate("/dashboard")}>
             <Bell color="orange" size="32px" cursor="pointer" />
-          </Indicator>
+            {badges > 0 && (
+              <Badge
+                color={badges > 0 ? "blue" : "grey"}
+                size={isMobile ? "xs" : "sm"}
+                w={isMobile ? "sm" : "md"}
+                p={isMobile ? 0 : 2}
+              >
+                {badges}
+              </Badge>
+            )}
+          </Flex>
           <Popover
             opened={popoverOpened}
             onChange={setPopoverOpened}
