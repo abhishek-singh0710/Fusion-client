@@ -224,6 +224,7 @@ export default function ConferenceSymposium() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Start Date"
                   name="startDate"
                   value={inputs.startDate}
@@ -245,6 +246,7 @@ export default function ConferenceSymposium() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="End Date"
                   name="endDate"
                   value={inputs.endDate}

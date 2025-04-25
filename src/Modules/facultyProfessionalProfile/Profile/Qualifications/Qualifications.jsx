@@ -171,6 +171,7 @@ export default function Qualifications() {
               </Grid.Col>
               <Grid.Col span={12}>
                 <Textarea
+                  required
                   label="Description"
                   placeholder="Enter description (optional)"
                   value={inputs.description}

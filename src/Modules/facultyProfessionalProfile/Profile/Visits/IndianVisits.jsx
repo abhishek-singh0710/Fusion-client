@@ -213,6 +213,7 @@ export default function IndianVisits() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="From"
                   name="fromDate"
                   value={inputs.fromDate}
@@ -235,6 +236,7 @@ export default function IndianVisits() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="To"
                   name="toDate"
                   value={inputs.toDate}

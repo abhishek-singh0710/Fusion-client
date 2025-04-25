@@ -155,6 +155,7 @@ export default function Honors() {
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Period"
                   placeholder="Enter period (optional)"
                   value={inputs.period}
@@ -166,6 +167,7 @@ export default function Honors() {
               </Grid.Col>
               <Grid.Col span={12}>
                 <Textarea
+                  required
                   label="Description"
                   placeholder="Enter description (optional)"
                   value={inputs.description}

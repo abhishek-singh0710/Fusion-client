@@ -177,6 +177,7 @@ export default function AdministrativePosition() {
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="From Date"
                   type="date"
                   value={inputs.dateFrom}
@@ -188,6 +189,7 @@ export default function AdministrativePosition() {
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="To Date"
                   type="date"
                   value={inputs.dateTo}

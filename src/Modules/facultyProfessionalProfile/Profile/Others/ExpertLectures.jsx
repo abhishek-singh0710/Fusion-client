@@ -198,6 +198,7 @@ export default function ExpertLecturesForm() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Date"
                   name="date"
                   value={inputs.date}

@@ -506,6 +506,7 @@ export default function AboutMePage() {
 
           {/* About Me Section */}
           <Textarea
+            required
             label="About Me"
             name="aboutMe"
             value={inputs.aboutMe}
@@ -520,6 +521,7 @@ export default function AboutMePage() {
           <Grid mt="md" gutter="md">
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Date Of Joining"
                 name="dateOfJoining"
                 value={inputs.dateOfJoining}
@@ -530,6 +532,7 @@ export default function AboutMePage() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Pension Fund #"
                 name="pensionFund"
                 value={inputs.pensionFund}
@@ -539,6 +542,7 @@ export default function AboutMePage() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Education"
                 name="education"
                 value={inputs.education}
@@ -548,6 +552,7 @@ export default function AboutMePage() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Interest Areas"
                 name="interestAreas"
                 value={inputs.interestAreas}
@@ -561,6 +566,7 @@ export default function AboutMePage() {
           <Grid mt="md" gutter="md">
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Contact"
                 name="contact"
                 value={inputs.contact}
@@ -571,6 +577,7 @@ export default function AboutMePage() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Email"
                 name="email"
                 value={inputs.email}
@@ -581,6 +588,7 @@ export default function AboutMePage() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="LinkedIn"
                 name="linkedIn"
                 value={inputs.linkedIn}
@@ -591,6 +599,7 @@ export default function AboutMePage() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
+                required
                 label="Github"
                 name="github"
                 value={inputs.github}

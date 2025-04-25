@@ -238,6 +238,7 @@ export default function ResearchProjects() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Submission Date"
                   name="submissionDate"
                   value={inputs.submissionDate}
@@ -250,6 +251,7 @@ export default function ResearchProjects() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Start Date"
                   name="startDate"
                   value={inputs.startDate}
@@ -262,6 +264,7 @@ export default function ResearchProjects() {
 
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Expected Finish Date"
                   name="expectedFinishDate"
                   value={inputs.expectedFinishDate}

@@ -192,6 +192,7 @@ export default function Conference() {
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="Co-author(s)"
                   placeholder="Co-Author"
                   value={inputs.coAuthors}

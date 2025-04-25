@@ -165,6 +165,7 @@ export default function ProfessionalExperience() {
               </Grid.Col>
               <Grid.Col span={12}>
                 <Textarea
+                  required
                   label="Description"
                   placeholder="Enter job description"
                   value={inputs.description}
@@ -176,6 +177,7 @@ export default function ProfessionalExperience() {
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="From Date"
                   type="date"
                   value={inputs.fromDate}
@@ -187,6 +189,7 @@ export default function ProfessionalExperience() {
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
+                  required
                   label="To Date"
                   type="date"
                   value={inputs.toDate}
