@@ -473,6 +473,7 @@ export default function Journal() {
             Report:
           </Title>
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -597,6 +598,7 @@ export default function Journal() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

@@ -298,6 +298,7 @@ export default function ViewEvents() {
           )}
 
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -412,6 +413,7 @@ export default function ViewEvents() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

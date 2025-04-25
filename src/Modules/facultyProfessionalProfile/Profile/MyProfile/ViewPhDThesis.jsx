@@ -115,6 +115,7 @@ export default function ViewPhdThesis() {
           </ScrollArea> */}
 
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -209,6 +210,7 @@ export default function ViewPhdThesis() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

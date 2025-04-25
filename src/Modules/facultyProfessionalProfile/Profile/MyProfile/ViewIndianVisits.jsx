@@ -115,6 +115,7 @@ export default function ViewIndianVisits() {
           </ScrollArea> */}
 
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -213,6 +214,7 @@ export default function ViewIndianVisits() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

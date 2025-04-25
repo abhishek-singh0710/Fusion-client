@@ -231,6 +231,7 @@ export default function ProfessionalExperience() {
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
             Professional Experiences:
           </Title>
+          <div style={{ overflowX: "auto" }}>
           <Table
             striped
             highlightOnHover
@@ -341,6 +342,7 @@ export default function ProfessionalExperience() {
               )}
             </tbody>
           </Table>
+          </div>
 
           <Pagination
             total={Math.ceil(tableData.length / rowsPerPage)}

@@ -210,6 +210,7 @@ export default function Honors() {
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
             Honors:
           </Title>
+          <div style={{ overflowX: "auto" }}>
           <Table
             striped
             highlightOnHover
@@ -311,6 +312,7 @@ export default function Honors() {
               )}
             </tbody>
           </Table>
+          </div>
 
           <Pagination
             total={Math.ceil(tableData.length / rowsPerPage)}

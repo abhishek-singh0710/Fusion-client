@@ -244,6 +244,7 @@ export default function Books() {
             Report:
           </Title>
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -368,6 +369,7 @@ export default function Books() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

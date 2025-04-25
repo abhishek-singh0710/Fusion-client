@@ -448,6 +448,7 @@ export default function Conference() {
             Report:
           </Title>
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -572,6 +573,7 @@ export default function Conference() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

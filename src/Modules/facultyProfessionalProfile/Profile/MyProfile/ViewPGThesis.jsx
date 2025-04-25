@@ -115,6 +115,7 @@ export default function PgThesis() {
           </ScrollArea> */}
 
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -209,6 +210,7 @@ export default function PgThesis() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

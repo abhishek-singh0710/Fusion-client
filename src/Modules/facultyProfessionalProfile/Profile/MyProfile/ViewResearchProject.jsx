@@ -152,6 +152,7 @@ export default function ViewResearchProject() {
           </ScrollArea> */}
 
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -292,6 +293,7 @@ export default function ViewResearchProject() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}

@@ -306,6 +306,7 @@ export default function ExpertLecturesForm() {
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
             Report:
           </Title>
+          <div style={{ overflowX: "auto" }}>
           <Table
             striped
             highlightOnHover
@@ -424,6 +425,7 @@ export default function ExpertLecturesForm() {
               )}
             </tbody>
           </Table>
+          </div>
 
           {/* Pagination Component */}
           <Pagination

@@ -82,6 +82,7 @@ export default function ViewJournal() {
           )}
 
           <ScrollArea>
+          <div style={{ overflowX: "auto" }}>
             <Table
               striped
               highlightOnHover
@@ -180,6 +181,7 @@ export default function ViewJournal() {
                 )}
               </tbody>
             </Table>
+            </div>
           </ScrollArea>
 
           {/* Pagination Component */}
