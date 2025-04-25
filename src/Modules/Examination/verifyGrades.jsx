@@ -76,7 +76,7 @@ function VerifyGrades() {
 
       try {
         const requestData = {
-          Role:userRole,
+          Role: userRole,
         };
 
         const { data } = await axios.post(update_grades, requestData, {
@@ -128,7 +128,6 @@ function VerifyGrades() {
     }
 
     try {
-      
       const requestData = {
         Role: userRole,
         course: selectedCourse,

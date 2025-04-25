@@ -22,7 +22,7 @@ function CheckResult() {
 
   const handleSearch = async () => {
     const token = localStorage.getItem("authToken"); // Get the token from localStorage
-// console.log(token);
+    // console.log(token);
     if (!selectedSemester) {
       alert("Please select a semester");
       return;
@@ -30,14 +30,14 @@ function CheckResult() {
 
     try {
       const response = await axios.post(
-        check_result, 
-        { semester: selectedSemester},
+        check_result,
+        { semester: selectedSemester },
         {
-          headers: {Authorization: `Token ${token}`}
-        }
+          headers: { Authorization: `Token ${token}` },
+        },
       );
       const { courses, spi, su, tu } = response.data;
-    //  console.log(selectedSemester); 
+      //  console.log(selectedSemester);
       setResultData(courses);
       setSpi(spi);
       setSu(su);

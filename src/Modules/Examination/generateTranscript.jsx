@@ -50,13 +50,12 @@ function GenerateTranscript() {
         setLoading(true);
         const { data } = await axios.get(generate_transcript_form, {
           params: {
-            role: userRole
+            role: userRole,
           },
-          headers: { 
-            Authorization: `Token ${token}` 
-          }
+          headers: {
+            Authorization: `Token ${token}`,
+          },
         });
-        
 
         // Remove duplicates
         const uniqueprogramme = [...new Set(data.programmes || [])];
@@ -117,15 +116,19 @@ function GenerateTranscript() {
       setLoading(true);
       console.log("Submitting Data:", formData);
       const requestData = {
-        Role: userRole
-      }
+        Role: userRole,
+      };
       const combinedData = {
         ...requestData,
-        ...formData
+        ...formData,
       };
-      const { data } = await axios.post(generate_transcript_form, combinedData, {
-        headers: { Authorization: `Token ${token}` },
-      });
+      const { data } = await axios.post(
+        generate_transcript_form,
+        combinedData,
+        {
+          headers: { Authorization: `Token ${token}` },
+        },
+      );
       console.log(data);
       setTranscriptData(data);
       setShowTranscript(true);

@@ -143,23 +143,27 @@ function Admin_view_a_courses() {
               >
                 <thead>
                   <tr>
-                    {["Course Code", "Course Name", "Version", "Credits", "Edit"].map(
-                      (header, index) => (
-                        <th
-                          key={index}
-                          style={{
-                            padding: "15px 20px",
-                            backgroundColor: "#C5E2F6",
-                            color: "#3498db",
-                            fontSize: "16px",
-                            textAlign: "center",
-                            borderRight: index < 4 ? "1px solid #d3d3d3" : "none",
-                          }}
-                        >
-                          {header}
-                        </th>
-                      )
-                    )}
+                    {[
+                      "Course Code",
+                      "Course Name",
+                      "Version",
+                      "Credits",
+                      "Edit",
+                    ].map((header, index) => (
+                      <th
+                        key={index}
+                        style={{
+                          padding: "15px 20px",
+                          backgroundColor: "#C5E2F6",
+                          color: "#3498db",
+                          fontSize: "16px",
+                          textAlign: "center",
+                          borderRight: index < 4 ? "1px solid #d3d3d3" : "none",
+                        }}
+                      >
+                        {header}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -226,7 +230,9 @@ function Admin_view_a_courses() {
                           textAlign: "center",
                         }}
                       >
-                        <Link to={`/programme_curriculum/faculty_forward_form?course=${course.code}`}>
+                        <Link
+                          to={`/programme_curriculum/faculty_forward_form?course=${course.code}`}
+                        >
                           <Button
                             style={{
                               backgroundColor: "#28a745",
@@ -239,7 +245,8 @@ function Admin_view_a_courses() {
                             }}
                             onMouseOver={(e) => {
                               e.currentTarget.style.backgroundColor = "#218838";
-                              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+                              e.currentTarget.style.boxShadow =
+                                "0 4px 8px rgba(0, 0, 0, 0.2)";
                             }}
                             onMouseOut={(e) => {
                               e.currentTarget.style.backgroundColor = "#28a745";

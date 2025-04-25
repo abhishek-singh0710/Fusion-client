@@ -13,7 +13,6 @@ import {
   Box,
   TextInput,
   Divider,
-  ActionIcon,
   Grid,
   Autocomplete,
   Modal,
@@ -181,34 +180,6 @@ export default function ViewFile({ onBack, fileID, updateFiles }) {
   const handleFileChange = (data) => {
     setFiles(data);
   };
-  // Handle file deletion
-  const handleDelete = async () => {
-    try {
-      const response = await axios.delete(`${createFileRoute}${fileID}`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      });
-      if (response.status === 204) {
-        updateFiles();
-        onBack();
-        notifications.show({
-          title: "File deleted successfully",
-          message: "The file has been deleted successfully.",
-          color: "green",
-          position: "top-center",
-        });
-      }
-    } catch (err) {
-      notifications.show({
-        title: "Failed to delete file",
-        message: "Some error occurred. Please try again later.",
-        color: "red",
-        position: "top-center",
-      });
-    }
-  };
 
   // Handle file forwarding
   const handleForward = async () => {
@@ -272,6 +243,7 @@ export default function ViewFile({ onBack, fileID, updateFiles }) {
       setShowForwardModal(false);
       setSelectedForwardFile(null);
       toggleSection(null);
+      updateFiles();
       onBack();
     }
   };
@@ -299,16 +271,12 @@ export default function ViewFile({ onBack, fileID, updateFiles }) {
             <ArrowLeft size={20} />
           </Button>
           <Title order={3} style={{ textAlign: "center", flex: 1 }}>
-            {file?.subject || "File Details"}
+            {file.branch}-{new Date(file.upload_date).getFullYear()}-
+            {(new Date(file.upload_date).getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}
+            -#{file.id}
           </Title>
-          <ActionIcon
-            color="red"
-            variant="light"
-            size="lg"
-            onClick={() => handleDelete()}
-          >
-            <Trash size={24} />
-          </ActionIcon>
         </Group>
 
         <Divider mb="lg" />
@@ -652,7 +620,6 @@ export default function ViewFile({ onBack, fileID, updateFiles }) {
             value={files} // Set the file state as the value
             onChange={handleFileChange} // Update file state on change
             mb="sm"
-            withAsterisk
             multiple
           />
 
@@ -670,6 +637,7 @@ export default function ViewFile({ onBack, fileID, updateFiles }) {
               color="blue"
               onClick={() => openForwardModal(file)}
               loading={isForwarding}
+              disabled={!receiver_designation || !receiver_username || !remarks}
             >
               Forward File
             </Button>
@@ -698,8 +666,10 @@ export default function ViewFile({ onBack, fileID, updateFiles }) {
         }
         centered
       >
-        <Text weight={600} mb="md">
-          Are you sure you want to forward this file?
+        <Text weight={600}>Are you sure you want to forward this file?</Text>
+        <Text weight={600}>From: {file.uploader}</Text>
+        <Text>
+          To: {receiver_username}({receiver_designation})
         </Text>
         {selectedForwardFile && (
           <>

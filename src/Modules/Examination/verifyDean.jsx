@@ -50,12 +50,21 @@ const GRADE_COLORS = {
 };
 
 // Define possible grade options for the dropdown
-const GRADE_OPTIONS = ["O","A+", "A", "B+", "B", "C+", "C", "D+", "D", "F"].map(
-  (grade) => ({
-    value: grade,
-    label: grade,
-  }),
-);
+const GRADE_OPTIONS = [
+  "O",
+  "A+",
+  "A",
+  "B+",
+  "B",
+  "C+",
+  "C",
+  "D+",
+  "D",
+  "F",
+].map((grade) => ({
+  value: grade,
+  label: grade,
+}));
 
 function VerifyGrades() {
   const [loading, setLoading] = useState(false);
@@ -169,8 +178,8 @@ function VerifyGrades() {
         setRegistrations([]); // Clear any previous registration data
       } else if (response.data.registrations) {
         const initialRegistrations = response.data.registrations.map((reg) => ({
-            ...reg,
-            remarks: reg.remarks || "", // Ensure remarks is always a string
+          ...reg,
+          remarks: reg.remarks || "", // Ensure remarks is always a string
         }));
         setRegistrations(initialRegistrations);
         setGradesStats(calculateGradeStats(initialRegistrations));
@@ -184,9 +193,9 @@ function VerifyGrades() {
         );
         setIsAlreadyVerified(false); // Explicitly set to false if data is fetched
       } else {
-         // Handle cases where the response is unexpected but not an error
-         setError("Received an unexpected response from the server.");
-         setRegistrations([]);
+        // Handle cases where the response is unexpected but not an error
+        setError("Received an unexpected response from the server.");
+        setRegistrations([]);
       }
     } catch (err) {
       if (err.response) {
@@ -290,27 +299,31 @@ function VerifyGrades() {
       setIsAlreadyVerified(true); // Set as verified after successful operation
       setShowContent(false); // Optionally hide the table after verification
     } catch (err) {
-         if (err.response) {
-             // Attempt to parse JSON error from blob response if verification fails
-             try {
-                 const errorJson = JSON.parse(await err.response.data.text());
-                 switch (err.response.status) {
-                     case 403:
-                         setError("Access denied. You don't have permission to verify grades.");
-                         break;
-                     case 400:
-                         setError(errorJson.error || "Invalid data provided.");
-                         break;
-                     default:
-                         setError(`Error verifying grades: ${errorJson.error || `Status ${err.response.status}`}`);
-                 }
-             } catch (parseError) {
-                 // Fallback if response is not JSON
-                 setError(`Error verifying grades: ${err.message}`);
-             }
-         } else {
-             setError(`Network error: ${err.message}`);
-         }
+      if (err.response) {
+        // Attempt to parse JSON error from blob response if verification fails
+        try {
+          const errorJson = JSON.parse(await err.response.data.text());
+          switch (err.response.status) {
+            case 403:
+              setError(
+                "Access denied. You don't have permission to verify grades.",
+              );
+              break;
+            case 400:
+              setError(errorJson.error || "Invalid data provided.");
+              break;
+            default:
+              setError(
+                `Error verifying grades: ${errorJson.error || `Status ${err.response.status}`}`,
+              );
+          }
+        } catch (parseError) {
+          // Fallback if response is not JSON
+          setError(`Error verifying grades: ${err.message}`);
+        }
+      } else {
+        setError(`Network error: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -357,12 +370,14 @@ function VerifyGrades() {
         backgroundColor: "white",
       }}
     >
-      <Paper p="md" radius="md" shadow="sm" style={{ position: 'relative' }}> {/* Added relative positioning for overlay */}
-        <LoadingOverlay visible={loading} overlayBlur={2} /> {/* Moved overlay here */}
+      <Paper p="md" radius="md" shadow="sm" style={{ position: "relative" }}>
+        {" "}
+        {/* Added relative positioning for overlay */}
+        <LoadingOverlay visible={loading} overlayBlur={2} />{" "}
+        {/* Moved overlay here */}
         <Title order={2} mb="lg">
           Verify Grades
         </Title>
-
         {error && (
           <Alert
             color="red"
@@ -374,7 +389,6 @@ function VerifyGrades() {
             {error}
           </Alert>
         )}
-
         {successMessage && (
           <Alert
             color="green"
@@ -386,8 +400,9 @@ function VerifyGrades() {
             {successMessage}
           </Alert>
         )}
-
-        <Grid mb="md"> {/* Added margin-bottom */}
+        <Grid mb="md">
+          {" "}
+          {/* Added margin-bottom */}
           <Grid.Col xs={12} sm={5}>
             <Select
               label="Course"
@@ -418,10 +433,10 @@ function VerifyGrades() {
               placeholder="Select year"
               value={selectedYear}
               onChange={(value) => {
-                  setSelectedYear(value);
-                  setShowContent(false); // Hide details when year changes
-                  setRegistrations([]); // Clear old data
-                  setIsAlreadyVerified(false); // Reset verification status
+                setSelectedYear(value);
+                setShowContent(false); // Hide details when year changes
+                setRegistrations([]); // Clear old data
+                setIsAlreadyVerified(false); // Reset verification status
               }}
               data={years}
               disabled={loading}
@@ -444,12 +459,11 @@ function VerifyGrades() {
             </Button>
           </Grid.Col>
         </Grid>
-
         {/* Only show content area if showContent is true */}
         {showContent && registrations.length > 0 && (
           <>
             <ScrollArea mt="lg">
-              <Table striped highlightOnHover withBorder captionSide="top" >
+              <Table striped highlightOnHover withBorder captionSide="top">
                 <caption>
                   <Group position="apart">
                     <Text size="lg" weight={500}>
@@ -479,7 +493,9 @@ function VerifyGrades() {
               </Table>
             </ScrollArea>
 
-            <Grid mt="xl" align="flex-end"> {/* Align items to bottom */}
+            <Grid mt="xl" align="flex-end">
+              {" "}
+              {/* Align items to bottom */}
               <Grid.Col xs={12} md={6}>
                 <Paper p="md" radius="md" shadow="sm" className="statistics">
                   <Text size="lg" weight={500} mb="md">
@@ -512,39 +528,39 @@ function VerifyGrades() {
                   </ResponsiveContainer>
                 </Paper>
               </Grid.Col>
-              <Grid.Col
-                xs={12}
-                md={6}
-              >
-                 <Group position="right" direction="column" spacing="md"> {/* Group button and switch */}
-                    <Switch
-                       label="Allow Resubmission"
-                       checked={allowResubmission}
-                       onChange={(event) => setAllowResubmission(event.currentTarget.checked)}
-                       disabled={isAlreadyVerified || loading}
-                       size="md"
-                    />
-                    <Button
-                      size="lg"
-                      onClick={handleVerify}
-                      color="blue"
-                      disabled={isAlreadyVerified || loading} // Disable only based on verification status and loading
-                      loading={loading && !successMessage} // Show loading state on button during verification
-                    >
-                      Verify and Download
-                    </Button>
+              <Grid.Col xs={12} md={6}>
+                <Group position="right" direction="column" spacing="md">
+                  {" "}
+                  {/* Group button and switch */}
+                  <Switch
+                    label="Allow Resubmission"
+                    checked={allowResubmission}
+                    onChange={(event) =>
+                      setAllowResubmission(event.currentTarget.checked)
+                    }
+                    disabled={isAlreadyVerified || loading}
+                    size="md"
+                  />
+                  <Button
+                    size="lg"
+                    onClick={handleVerify}
+                    color="blue"
+                    disabled={isAlreadyVerified || loading} // Disable only based on verification status and loading
+                    loading={loading && !successMessage} // Show loading state on button during verification
+                  >
+                    Verify and Download
+                  </Button>
                 </Group>
               </Grid.Col>
             </Grid>
           </>
         )}
-         {/* Show message if content should be shown but no registrations */}
-         {showContent && registrations.length === 0 && !isAlreadyVerified && (
-              <Text align="center" color="dimmed" mt="xl">
-                  No student records found for this selection.
-              </Text>
-         )}
-
+        {/* Show message if content should be shown but no registrations */}
+        {showContent && registrations.length === 0 && !isAlreadyVerified && (
+          <Text align="center" color="dimmed" mt="xl">
+            No student records found for this selection.
+          </Text>
+        )}
         {/* Keep LoadingOverlay outside conditional rendering if it should cover everything */}
         {/* <LoadingOverlay visible={loading} overlayBlur={2} /> */}
       </Paper>

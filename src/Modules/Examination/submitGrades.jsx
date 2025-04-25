@@ -11,7 +11,11 @@ import {
   Alert,
 } from "@mantine/core";
 import axios from "axios";
-import { get_courses, download_template, upload_grades } from "./routes/examinationRoutes"; // Import API routes
+import {
+  get_courses,
+  download_template,
+  upload_grades,
+} from "./routes/examinationRoutes"; // Import API routes
 import { FileArrowDown } from "@phosphor-icons/react";
 import { useSelector } from "react-redux";
 function SubmitGrades() {
@@ -106,7 +110,7 @@ function SubmitGrades() {
       setLoading(true);
 
       const requestData = {
-        Role:userRole,
+        Role: userRole,
         course: courseId, // Ensure course ID is passed
         year: parseInt(year), // Ensure year is an integer
       };
@@ -122,10 +126,7 @@ function SubmitGrades() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `template_${courseId}_${year}.csv`,
-      ); // Set filename
+      link.setAttribute("download", `template_${courseId}_${year}.csv`); // Set filename
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -177,7 +178,9 @@ function SubmitGrades() {
 
       setError(null);
     } catch (error) {
-      setError(`Error uploading grades: ${error.response?.data?.error || error.message}`);
+      setError(
+        `Error uploading grades: ${error.response?.data?.error || error.message}`,
+      );
       console.error("Upload error:", error);
     } finally {
       setLoading(false);

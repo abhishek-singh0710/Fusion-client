@@ -31,7 +31,7 @@ export default function Nav() {
   const activeLinkStyle = {
     backgroundColor: "#15abff13", // Light blue background (same as Dashboard)
     color: "#15abff", // Blue text (same as Dashboard)
-     // Bold text (same as Dashboard)
+    // Bold text (same as Dashboard)
     borderBottom: "2px solid #15abff", // Blue bottom border
     borderBottomLeftRadius: "4px", // Curved bottom-left corner
     borderBottomRightRadius: "4px", // Curved bottom-right corner
@@ -58,7 +58,7 @@ export default function Nav() {
     {
       title: "Submit",
       path: "/examination/submit-grades-prof",
-      roles: ["Professor","Assistant Professor","Associate Professor"],
+      roles: ["Professor", "Assistant Professor", "Associate Professor"],
     },
     {
       title: "Verify",
@@ -84,9 +84,9 @@ export default function Nav() {
     {
       title: "Download Grades",
       path: "/examination/download-grades-prof",
-      roles: ["Professor","Assistant Professor","Associate Professor"],
+      roles: ["Professor", "Assistant Professor", "Associate Professor"],
     },
-    
+
     { title: "Result", path: "/examination/result", roles: ["Student"] },
   ];
 

@@ -14,27 +14,46 @@ import {
   Card,
   Textarea,
   Grid,
+  Anchor,
   Accordion,
   Tabs,
   ActionIcon,
   FileInput,
   Select,
   Tooltip,
+  Center,
+  Box,
+  Loader,
+  Drawer,
+  ThemeIcon,
 } from "@mantine/core";
 import {
   IconFileDescription,
   IconArchive,
-  IconCheck,
+  // IconCheck,
   IconSend,
-  IconClock,
+  // IconClock,
+  IconThumbUp,
   IconNotes,
   IconPaperclip,
   IconMessageDots,
   IconPrinter,
+  IconHistory,
+  IconArrowForward,
+  IconCalendarTime,
+  IconFileDownload,
+  IconClipboardCheck,
+  IconClipboardX,
+  // IconStamp,
+  IconUserCheck,
+  IconBadge,
+  IconCheckbox,
 } from "@tabler/icons-react";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useMediaQuery } from "@mantine/hooks";
 import { host } from "../../routes/globalRoutes";
+import { historyRoute } from "../../routes/filetrackingRoutes";
 import {
   archiveIndentRoute,
   viewIndentRoute,
@@ -49,12 +68,19 @@ function EmployeeViewFileIndent() {
   const [error, setError] = useState("");
   const [indent, setIndent] = useState(null);
   const [activeTab, setActiveTab] = useState("notesheets");
+  const [fileHistory, setFileHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
   const [designations, setDesignations] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
+  const username = useSelector((state) => state.user.username);
+  const [isApproving, setIsApproving] = useState(false);
+  const [stringg, setstringg] = useState("");
+  console.log(stringg);
+  const [approvalHistory, setApprovalHistory] = useState([]);
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
@@ -79,9 +105,28 @@ function EmployeeViewFileIndent() {
     return (
       indent?.indent.head_approval &&
       indent?.indent.director_approval &&
-      !indent?.indent.financial_approval
+      indent?.indent.purchased &&
+      !indent?.indent.financial_approval &&
+      role === "ps_admin"
     );
   };
+
+  const getHistory = async (fileID) => {
+    try {
+      const response = await axios.get(`${historyRoute}${fileID}`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        },
+      });
+
+      console.log("History Data:", response.data); // Logging the input
+      setFileHistory(response.data.reverse()); // Set the response data
+    } catch (err) {
+      console.error("Error fetching history:", err);
+    }
+  };
+
   const fetchAllUsers = async () => {
     try {
       const response = await axios.get(
@@ -89,6 +134,7 @@ function EmployeeViewFileIndent() {
       );
       setUsers(response.data.users);
       setFilteredUsers(response.data.users);
+      await getHistory(indentID);
     } catch (err) {
       console.error("Error fetching all users", err);
     }
@@ -125,6 +171,8 @@ function EmployeeViewFileIndent() {
     filterUsers(value);
     fetchDesignations(value);
   };
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -206,6 +254,26 @@ function EmployeeViewFileIndent() {
         },
       );
       setIndent(response.data);
+      console.log(response.data);
+      setstringg(response.data.indent.approved_by);
+      console.log(response.data.indent.approved_by);
+      if (response.data.indent.approved_by) {
+        const approvals = response.data.indent.approved_by
+          .split(",")
+          .map((approval) => {
+            const trimmed = approval.trim();
+            const lastDashIndex = trimmed.lastIndexOf("-");
+            const namePart = trimmed.slice(0, lastDashIndex);
+            const rolePart = trimmed.slice(lastDashIndex + 1);
+
+            const name = namePart.replace(/_/g, " ");
+            const rolee = rolePart.trim();
+
+            return { name, rolee };
+          });
+
+        setApprovalHistory(approvals);
+      }
       // if (
       //   response.data.director_approval &&
       //   response.data.head_approval &&
@@ -214,12 +282,40 @@ function EmployeeViewFileIndent() {
       //   console.log()
       //   setStockEntryShow(true);
       // }
-      console.log(response.data);
+      console.log("indent", response.data);
     } catch (err) {
       console.error("Error fetching indents:", err);
       setError("Failed to fetch indent details.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApprove = async () => {
+    if (isApproving) return; // Optional double-check
+    setIsApproving(true);
+    try {
+      const token = localStorage.getItem("authToken");
+      console.log(indentID);
+      console.log(`${username}-${role}`);
+      await axios.post(
+        `${host}/purchase-and-store/api/approve-indent/`,
+        {
+          indent_id: indentID,
+          approval_data: `${username}-${role}`,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      // Refetch indent details to update approval status
+      await fetchIndentDetails();
+    } catch (e) {
+      console.error("Error approving indent:", e);
     }
   };
 
@@ -231,9 +327,14 @@ function EmployeeViewFileIndent() {
 
   if (!indent) {
     return (
-      <Container size="xl" py="xl">
-        <Text>Loading indent details...</Text>
-      </Container>
+      <Center style={{ height: "80vh" }}>
+        <Paper shadow="md" radius="md" p="xl" withBorder>
+          <Box>
+            <Loader size="sm" color="blue" />
+            <Text mt="sm">Loading indent details...</Text>
+          </Box>
+        </Paper>
+      </Center>
     );
   }
 
@@ -257,10 +358,34 @@ function EmployeeViewFileIndent() {
               </div>
             </Group>
             <Group>
-              <Badge size="lg" color={indent.purchased ? "green" : "blue"}>
-                {indent.purchased ? "Purchased" : "In Progress"}
+              {role !== "Professor" && (
+                <Button
+                  variant="light"
+                  color="green"
+                  size="md"
+                  leftIcon={<IconThumbUp size={20} />}
+                  onClick={handleApprove}
+                  disabled={isApproving}
+                >
+                  {isApproving ? "Approved" : "Approve Indent"}
+                </Button>
+              )}
+              <Button
+                variant="light"
+                color="blue"
+                size="md"
+                leftIcon={<IconHistory size={20} />}
+                onClick={() => setHistoryDrawerOpen(true)}
+              >
+                View Indent History
+              </Button>
+              <Badge
+                size="lg"
+                color={indent.indent.purchased ? "green" : "blue"}
+              >
+                {indent.indent.purchased ? "Purchased" : "In Progress"}
               </Badge>
-              {indent.revised && (
+              {indent.indent.revised && (
                 <Badge size="lg" color="yellow">
                   Revised
                 </Badge>
@@ -274,7 +399,17 @@ function EmployeeViewFileIndent() {
           </Group>
 
           {/* Approval Timeline */}
-          <Timeline active={1} bulletSize={24} lineWidth={2}>
+          {/* <Timeline
+            active={
+              indent.indent.financial_approval
+                ? 2
+                : indent.indent.director_approval
+                  ? 1
+                  : indent.indent.head_approval
+                    ? 0
+                    : -1
+            }
+          >
             <Timeline.Item
               bullet={
                 indent.indent.head_approval ? (
@@ -314,10 +449,150 @@ function EmployeeViewFileIndent() {
               title="Financial Approval"
             >
               <Text color="dimmed" size="sm">
-                Financial clearance status
+                Bill approval status
               </Text>
             </Timeline.Item>
-          </Timeline>
+          </Timeline> */}
+          {/* <Box mb="xl">
+            <Title order={4} mb="md">
+              Approval Status
+            </Title>
+
+            {approvalHistory.length === 0 ? (
+              <Text size="sm" color="dimmed">
+                No approvals received yet.
+              </Text>
+            ) : (
+              approvalHistory.map((approval, index) => (
+                <Paper
+                  key={index}
+                  p="md"
+                  mb="xs"
+                  withBorder
+                  sx={(theme) => ({
+                    backgroundColor: theme.colors.gray[0],
+                    display: "flex",
+                    alignItems: "center",
+                    gap: theme.spacing.sm,
+                  })}
+                >
+                  <ThemeIcon color="green" size={28} radius="xl">
+                    <IconCheck size={18} />
+                  </ThemeIcon>
+                  <div>
+                    <Text size="sm" weight={500}>
+                      Approved by {approval.name}
+                    </Text>
+                    <Text size="xs" color="dimmed" transform="capitalize">
+                      {approval.rolee.replace(/_/g, " ")}
+                    </Text>
+                  </div>
+                </Paper>
+              ))
+            )}
+          </Box> */}
+          <Box mb="xl">
+            <Group mb="md" align="center">
+              <IconClipboardCheck size={24} color="#228BE6" />
+              <Title order={4}>Approval Status</Title>
+            </Group>
+
+            {approvalHistory.length === 0 ? (
+              <Paper
+                p="md"
+                withBorder
+                sx={(theme) => ({
+                  backgroundColor: theme.fn.rgba(theme.colors.gray[0], 0.5),
+                  borderStyle: "dashed",
+                })}
+              >
+                <Group spacing="sm">
+                  <ThemeIcon size={32} radius="xl" color="gray" variant="light">
+                    <IconClipboardX size={20} />
+                  </ThemeIcon>
+                  <Text size="sm" color="dimmed">
+                    No approvals received yet.
+                  </Text>
+                </Group>
+              </Paper>
+            ) : (
+              <Timeline
+                active={approvalHistory.length - 1}
+                bulletSize={24}
+                lineWidth={2}
+              >
+                {approvalHistory.map((approval, index) => (
+                  <Timeline.Item
+                    key={index}
+                    bullet={
+                      <ThemeIcon
+                        size={24}
+                        radius="xl"
+                        color={
+                          index === approvalHistory.length - 1
+                            ? "green"
+                            : "blue"
+                        }
+                      >
+                        {/* <IconStamp size={14} /> */}
+                      </ThemeIcon>
+                    }
+                  >
+                    <Paper
+                      p="md"
+                      mb="xs"
+                      withBorder
+                      sx={(theme) => ({
+                        backgroundColor: theme.fn.rgba(
+                          index === approvalHistory.length - 1
+                            ? theme.colors.green[0]
+                            : theme.colors.blue[0],
+                          0.2,
+                        ),
+                        borderColor:
+                          index === approvalHistory.length - 1
+                            ? theme.colors.green[3]
+                            : theme.colors.blue[3],
+                      })}
+                    >
+                      <Group position="apart">
+                        <div>
+                          <Group spacing="xs" mb={4}>
+                            <IconUserCheck size={18} />
+                            <Text size="sm" weight={600}>
+                              {approval.name}
+                            </Text>
+                          </Group>
+                          <Group spacing="xs">
+                            <IconBadge size={16} />
+                            <Text
+                              size="xs"
+                              color="dimmed"
+                              transform="capitalize"
+                            >
+                              {approval.rolee.replace(/_/g, " ")}
+                            </Text>
+                          </Group>
+                        </div>
+                        <ThemeIcon
+                          size={32}
+                          radius="xl"
+                          color={
+                            index === approvalHistory.length - 1
+                              ? "green"
+                              : "blue"
+                          }
+                          variant="light"
+                        >
+                          <IconCheckbox size={20} />
+                        </ThemeIcon>
+                      </Group>
+                    </Paper>
+                  </Timeline.Item>
+                ))}
+              </Timeline>
+            )}
+          </Box>
         </Paper>
 
         <Card shadow="sm" radius="md" p="md" withBorder>
@@ -370,44 +645,52 @@ function EmployeeViewFileIndent() {
                     <Badge>Indent Details</Badge>
                   </Group>
                 </Accordion.Control>
+
                 <Accordion variant="contained" radius="md" mb="xl">
                   {indent.items.map((item) => (
                     <Accordion.Item key={item.id} value={item.id.toString()}>
                       <Accordion.Control>
-                        <Group position="apart" style={{ width: "100%" }}>
+                        <Group
+                          position="apart"
+                          wrap="nowrap"
+                          style={{ flexWrap: isMobile ? "wrap" : "nowrap" }}
+                        >
                           <Group>
-                            <Text weight={500}>{item.item_name}</Text>
-                            <Badge>Qty: {item.quantity}</Badge>
-                            <Text weight={500} color="blue">
-                              ₹{item.estimated_cost.toLocaleString()}
+                            <Text weight={500} size={isMobile ? "sm" : "md"}>
+                              {item.item_name}
                             </Text>
+                            <Badge>Qty: {item.quantity}</Badge>
                           </Group>
-                          <Group
-                            style={{ marginLeft: "auto", paddingRight: "10px" }}
+                          <Text
+                            weight={500}
+                            color="blue"
+                            size={isMobile ? "sm" : "md"}
                           >
-                            {showStockEntryButton() && (
-                              <Button
-                                color="green"
-                                onClick={() =>
-                                  navigate(`/purchase/stock_entry/`, {
-                                    state: {
-                                      file: indent.file,
-                                      department: indent.department,
-                                      indent: indent.indent, // Not indent.indent (unless it's a nested object)
-                                      item, // Ensure you're sending only the selected item
-                                    },
-                                  })
-                                }
-                              >
-                                Stock Entry
-                              </Button>
-                            )}
-                          </Group>
+                            ₹{item.estimated_cost.toLocaleString()}
+                          </Text>
+                          {showStockEntryButton() && (
+                            <Button
+                              color="green"
+                              size={isMobile ? "xs" : "sm"}
+                              onClick={() =>
+                                navigate("/purchase/stock_entry/", {
+                                  state: {
+                                    file: indent.file,
+                                    department: indent.department,
+                                    indent: indent.indent,
+                                    item,
+                                  },
+                                })
+                              }
+                            >
+                              Stock Entry
+                            </Button>
+                          )}
                         </Group>
                       </Accordion.Control>
                       <Accordion.Panel>
-                        <Grid>
-                          <Grid.Col span={6}>
+                        <Grid gutter="md">
+                          <Grid.Col span={isMobile ? 12 : 6}>
                             <Card withBorder p="md">
                               <Text weight={500} mb="xs">
                                 Specifications
@@ -415,7 +698,7 @@ function EmployeeViewFileIndent() {
                               <Text size="sm">{item.specification}</Text>
                             </Card>
                           </Grid.Col>
-                          <Grid.Col span={6}>
+                          <Grid.Col span={isMobile ? 12 : 6}>
                             <Card withBorder p="md">
                               <Text weight={500} mb="xs">
                                 Purpose
@@ -424,69 +707,69 @@ function EmployeeViewFileIndent() {
                             </Card>
                           </Grid.Col>
                           <Grid.Col span={12}>
-                            <Grid>
-                              <Grid.Col span={3}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Item Nature</Text>
-                                  <Badge color={item.nature ? "green" : "red"}>
-                                    {item.nature ? "Yes" : "No"}
-                                  </Badge>
-                                </Card>
-                              </Grid.Col>
-                              <Grid.Col span={3}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Replaced</Text>
-                                  <Badge
-                                    color={item.replaced ? "green" : "red"}
-                                  >
-                                    {item.replaced ? "Yes" : "No"}
-                                  </Badge>
-                                </Card>
-                              </Grid.Col>
-                              <Grid.Col span={3}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Indigenous</Text>
-                                  <Badge
-                                    color={item.indigenous ? "green" : "red"}
-                                  >
-                                    {item.indigenous ? "Yes" : "No"}
-                                  </Badge>
-                                </Card>
-                              </Grid.Col>
-                              <Grid.Col span={3}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Present Stock</Text>
-                                  <Text size="sm">{item.present_stock}</Text>
-                                </Card>
-                              </Grid.Col>
+                            <Grid gutter="md">
+                              {[
+                                {
+                                  label: "Item Nature",
+                                  value: item.nature,
+                                  color: item.nature ? "green" : "red",
+                                },
+                                {
+                                  label: "Replaced",
+                                  value: item.replaced,
+                                  color: item.replaced ? "green" : "red",
+                                },
+                                {
+                                  label: "Indigenous",
+                                  value: item.indigenous,
+                                  color: item.indigenous ? "green" : "red",
+                                },
+                                {
+                                  label: "Present Stock",
+                                  value: item.present_stock,
+                                  text: true,
+                                },
+                              ].map(({ label, value, color, text }) => (
+                                <Grid.Col key={label} span={isMobile ? 6 : 3}>
+                                  <Card withBorder p="md">
+                                    <Text weight={500}>{label}</Text>
+                                    {text ? (
+                                      <Text size="sm">{value}</Text>
+                                    ) : (
+                                      <Badge color={color}>
+                                        {value ? "Yes" : "No"}
+                                      </Badge>
+                                    )}
+                                  </Card>
+                                </Grid.Col>
+                              ))}
                             </Grid>
                           </Grid.Col>
                           <Grid.Col span={12}>
-                            <Grid>
-                              <Grid.Col span={4}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Type</Text>
-                                  <Text size="sm">
-                                    {item.item_type} - {item.item_subtype}
-                                  </Text>
-                                </Card>
-                              </Grid.Col>
-                              <Grid.Col span={4}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Budgetary Head</Text>
-                                  <Text size="sm">{item.budgetary_head}</Text>
-                                </Card>
-                              </Grid.Col>
-                              <Grid.Col span={4}>
-                                <Card withBorder p="md">
-                                  <Text weight={500}>Expected Delivery</Text>
-                                  <Text size="sm">
-                                    {dayjs(item.expected_delivery).format(
-                                      "MMM D, YYYY",
-                                    )}
-                                  </Text>
-                                </Card>
-                              </Grid.Col>
+                            <Grid gutter="md">
+                              {[
+                                {
+                                  label: "Type",
+                                  value: `${item.item_type} - ${item.item_subtype}`,
+                                },
+                                {
+                                  label: "Budgetary Head",
+                                  value: item.budgetary_head,
+                                },
+                                {
+                                  label: "Expected Delivery",
+                                  value: dayjs(item.expected_delivery).format(
+                                    "MMM D, YYYY",
+                                  ),
+                                },
+                              ].map(({ label, value }) => (
+                                <Grid.Col key={label} span={isMobile ? 12 : 4}>
+                                  <Card withBorder p="md">
+                                    <Text weight={500}>{label}</Text>
+                                    <Text size="sm">{value}</Text>
+                                  </Card>
+                                </Grid.Col>
+                              ))}
                             </Grid>
                           </Grid.Col>
                           <Grid.Col span={12}>
@@ -502,17 +785,63 @@ function EmployeeViewFileIndent() {
                     </Accordion.Item>
                   ))}
                 </Accordion>
-                {/* <Accordion.Panel>
-                  <DataTable indent={indent} />
-                </Accordion.Panel> */}
               </Accordion.Item>
             </Accordion>
           </Tabs.Panel>
 
           <Tabs.Panel value="attachments" pt="md">
-            <Card shadow="sm" radius="md" p="md">
-              <Text>No attachments available</Text>
-            </Card>
+            {fileHistory?.filter((item) => item.upload_file !== null).length ===
+            0 ? (
+              <Card shadow="sm" radius="md" p="md">
+                <Text>No attachments available</Text>
+              </Card>
+            ) : (
+              <Card shadow="md" radius="md" p="lg" withBorder>
+                <Text size="xl" fw={600} mb="md" ta="center">
+                  📎 Uploaded Attachments
+                </Text>
+
+                {fileHistory
+                  .filter((item) => item.upload_file !== null)
+                  .map((item, index) => {
+                    const fileName = item.upload_file.split("/").pop();
+                    const uploader = item.current_id;
+                    const date = new Date(item.forward_date).toLocaleString();
+
+                    return (
+                      <Card
+                        key={index}
+                        shadow="xs"
+                        radius="md"
+                        p="md"
+                        mb="sm"
+                        withBorder
+                        style={{ backgroundColor: "#f9f9f9" }}
+                      >
+                        <Anchor
+                          href={`${host}${item.upload_file}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          fw={500}
+                          c="blue"
+                          underline="hover"
+                        >
+                          <IconPaperclip
+                            size={18}
+                            style={{ display: "inline", marginRight: 6 }}
+                          />
+                          {fileName}
+                        </Anchor>
+
+                        <Text size="sm" c="dimmed" mt={4}>
+                          Uploaded by <strong>{uploader}</strong> on{" "}
+                          <em>{date}</em>
+                        </Text>
+                      </Card>
+                    );
+                  })}
+              </Card>
+            )}
           </Tabs.Panel>
         </Tabs>
       </div>
@@ -598,8 +927,67 @@ function EmployeeViewFileIndent() {
           Archive Indent
         </Button>
       </Group>
+      <Drawer
+        opened={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
+        title={<Title order={3}>File History</Title>}
+        padding="lg"
+        size="lg"
+        position="right"
+      >
+        <Timeline active={fileHistory.length - 1} bulletSize={24} lineWidth={2}>
+          {fileHistory.map((history, index) => (
+            <Timeline.Item
+              key={history.id}
+              bullet={
+                <ThemeIcon
+                  size={24}
+                  radius="xl"
+                  color={index === fileHistory.length - 1 ? "blue" : "gray"}
+                >
+                  <IconArrowForward size={12} />
+                </ThemeIcon>
+              }
+              title={
+                <Group spacing="xs">
+                  <Text weight={500}>{history.current_id}</Text>
+                  <IconArrowForward size={14} />
+                  <Text weight={500}>{history.receiver_id}</Text>
+                  <Badge size="sm">{history.receive_design}</Badge>
+                </Group>
+              }
+            >
+              <Box ml="xs">
+                <Text size="sm" color="dimmed" mb="xs">
+                  <IconCalendarTime
+                    size={14}
+                    style={{ verticalAlign: "middle" }}
+                  />{" "}
+                  {dayjs(history.forward_date).format("MMM D, YYYY h:mm A")}
+                </Text>
+                {history.remarks && (
+                  <Paper p="xs" bg="gray.0" radius="sm" mb="xs">
+                    <Text size="sm">{history.remarks}</Text>
+                  </Paper>
+                )}
+                {history.upload_file && (
+                  <Button
+                    variant="light"
+                    size="xs"
+                    leftIcon={<IconFileDownload size={14} />}
+                    component="a"
+                    href={`${host}${history.upload_file}`}
+                    target="_blank"
+                  >
+                    View Attachment
+                  </Button>
+                )}
+              </Box>
+            </Timeline.Item>
+          ))}
+        </Timeline>
+      </Drawer>
 
-      {/* Error Message */}
       {error && (
         <Text color="red" mt="md">
           {error}

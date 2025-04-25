@@ -95,12 +95,12 @@ function SubmitGradesProf() {
       setError(null);
       const token = localStorage.getItem("authToken");
 
-      const requestData = { 
-        Role: userRole, 
-        course, 
-        year: parseInt(year) 
+      const requestData = {
+        Role: userRole,
+        course,
+        year: parseInt(year),
       };
-      
+
       const response = await axios.post(download_template, requestData, {
         headers: { Authorization: `Token ${token}` },
         responseType: "blob",
@@ -115,7 +115,9 @@ function SubmitGradesProf() {
       document.body.removeChild(link);
       setSuccess("Template downloaded successfully!");
     } catch (error) {
-      setError(`Error downloading template: ${error.response?.data?.error || error.message}`);
+      setError(
+        `Error downloading template: ${error.response?.data?.error || error.message}`,
+      );
     } finally {
       setLoading(false);
     }
@@ -135,7 +137,7 @@ function SubmitGradesProf() {
       const token = localStorage.getItem("authToken");
 
       // Check file type
-      if (excelFile.type !== "text/csv" && !excelFile.name.endsWith('.csv')) {
+      if (excelFile.type !== "text/csv" && !excelFile.name.endsWith(".csv")) {
         setError("Please upload a valid CSV file.");
         setLoading(false);
         return;
@@ -148,26 +150,34 @@ function SubmitGradesProf() {
       formData.append("academic_year", year);
 
       const response = await axios.post(upload_grades_prof, formData, {
-        headers: { 
+        headers: {
           Authorization: `Token ${token}`,
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      setSuccess("Grades uploaded successfully! They are now pending verification.");
+      setSuccess(
+        "Grades uploaded successfully! They are now pending verification.",
+      );
       // Reset file selection
       setExcelFile(null);
     } catch (error) {
       if (error.response) {
         switch (error.response.status) {
           case 400:
-            setError(`Invalid input: ${error.response.data.error || "Please check your CSV file format."}`);
+            setError(
+              `Invalid input: ${error.response.data.error || "Please check your CSV file format."}`,
+            );
             break;
           case 403:
-            setError("You are not authorized to upload grades for this course.");
+            setError(
+              "You are not authorized to upload grades for this course.",
+            );
             break;
           default:
-            setError(`Error uploading grades: ${error.response.data.error || error.message}`);
+            setError(
+              `Error uploading grades: ${error.response.data.error || error.message}`,
+            );
         }
       } else {
         setError(`Network error: ${error.message}`);
@@ -189,16 +199,19 @@ function SubmitGradesProf() {
       }}
     >
       <Paper p="md" radius="md" shadow="sm">
-        <Title order={2} mb="md">Submit Course Grades</Title>
-        
-        {error && (
-          <Alert >
-            {error}
-          </Alert>
-        )}
-        
+        <Title order={2} mb="md">
+          Submit Course Grades
+        </Title>
+
+        {error && <Alert>{error}</Alert>}
+
         {success && (
-          <Alert color="green" mb="md" withCloseButton onClose={() => setSuccess(null)}>
+          <Alert
+            color="green"
+            mb="md"
+            withCloseButton
+            onClose={() => setSuccess(null)}
+          >
             {success}
           </Alert>
         )}
@@ -248,16 +261,24 @@ function SubmitGradesProf() {
             clearable
           />
           <Text size="xs" color="dimmed" mt={5}>
-            File must be in CSV format with columns: roll_no, grade, remarks (optional: semester)
+            File must be in CSV format with columns: roll_no, grade, remarks
+            (optional: semester)
           </Text>
         </Box>
 
         <Box mt="xl">
-          <Text size="sm" mb="xs" weight={500}>CSV File Format Requirements:</Text>
+          <Text size="sm" mb="xs" weight={500}>
+            CSV File Format Requirements:
+          </Text>
           <List size="sm" spacing="xs" center withPadding>
             <List.Item>Required columns: roll_no, grade, remarks</List.Item>
-            <List.Item>Optional column: semester (student's current semester will be used if not provided)</List.Item>
-            <List.Item>Each student must have a valid roll number and grade</List.Item>
+            <List.Item>
+              Optional column: semester (student's current semester will be used
+              if not provided)
+            </List.Item>
+            <List.Item>
+              Each student must have a valid roll number and grade
+            </List.Item>
           </List>
         </Box>
 
@@ -271,7 +292,7 @@ function SubmitGradesProf() {
           >
             Download Template
           </Button>
-          
+
           <Button
             leftIcon={<Upload size={20} />}
             color="blue"

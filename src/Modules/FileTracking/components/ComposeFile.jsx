@@ -29,7 +29,7 @@ import {
 axios.defaults.withCredentials = true;
 
 export default function Compose() {
-  const [files, setFiles] = React.useState(null);
+  const [files, setFiles] = React.useState([]);
   const [usernameSuggestions, setUsernameSuggestions] = React.useState([]);
   const [receiver_username, setReceiverUsername] = React.useState("");
   const [receiver_designation, setReceiverDesignation] = React.useState("");
@@ -53,15 +53,20 @@ export default function Compose() {
       }))
     : [];
 
-  const handleFileChange = (uploadedFile) => {
-    console.log(uploadedFile.size);
-    setFiles(uploadedFile);
+  const handleFileChange = (uploadedFiles) => {
+    if (Array.isArray(uploadedFiles)) {
+      setFiles(uploadedFiles);
+    } else if (uploadedFiles) {
+      setFiles([uploadedFiles]);
+    } else {
+      setFiles([]);
+    }
   };
   const removeFile = () => {
-    setFiles(null);
+    setFiles([]);
   };
   const postSubmit = () => {
-    removeFile();
+    setFiles([]);
     setDesignation("");
     setReceiverDesignation("");
     setReceiverDesignations("");
@@ -125,6 +130,10 @@ export default function Compose() {
       }
     }
   };
+  useEffect(() => {
+    setReceiverDesignation("");
+    setReceiverDesignations("");
+  }, [receiver_username]);
   const handleSaveDraft = async () => {
     try {
       const formData = new FormData();
@@ -157,7 +166,7 @@ export default function Compose() {
 
   const handleCreateFile = () => {
     if (
-      !files ||
+      files.length === 0 ||
       !subject ||
       !description ||
       !receiver_username ||
@@ -179,15 +188,17 @@ export default function Compose() {
     setShowConfirmModal(false);
     try {
       const formData = new FormData();
-      files.forEach((fileItem, index) => {
-        const fileAttachment =
-          fileItem instanceof File
-            ? fileItem
-            : new File([fileItem], `uploaded_file_${index}`, {
-                type: "application/octet-stream",
-              });
-        formData.append("files", fileAttachment);
-      });
+      if (Array.isArray(files) && files.length > 0) {
+        files.forEach((fileItem, index) => {
+          const fileAttachment =
+            fileItem instanceof File
+              ? fileItem
+              : new File([fileItem], `uploaded_file_${index}`, {
+                  type: "application/octet-stream",
+                });
+          formData.append("files", fileAttachment);
+        });
+      }
       formData.append("subject", subject);
       formData.append("description", description);
       formData.append("designation", designation);
@@ -282,9 +293,16 @@ export default function Compose() {
           placeholder="Enter description"
           mb="sm"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            const words = e.currentTarget.value.trim().split(/\s+/);
+            if (words.length < 100) {
+              setDescription(e.currentTarget.value);
+            }
+          }}
           required
         />
+        <Text align="right">{description.split(/\s+/).length} / 100 words</Text>
+
         <Textarea
           label="Remarks"
           placeholder="Enter remarks"
@@ -324,36 +342,56 @@ export default function Compose() {
             </Button>
           </Group>
         )}
-        <Grid mb="sm" gutter="sm">
+        <Grid mb="sm" gutter="md" align="flex-start">
           <Grid.Col span={{ base: 12, sm: 6 }}>
-            <Autocomplete
-              label="Send To"
-              placeholder="Enter recipient"
-              value={receiver_username}
-              data={usernameSuggestions}
-              onChange={(value) => {
-                setReceiverDesignation("");
-                setReceiverUsername(value);
-              }}
-            />
+            <Box style={{ height: "100%", width: "98.5%", marginLeft: "8px" }}>
+              <Autocomplete
+                label="Send To"
+                placeholder="Enter recipient"
+                value={receiver_username}
+                data={usernameSuggestions}
+                onChange={(value) => {
+                  setReceiverUsername(value); // update username
+                  setReceiverDesignation(""); // reset designation
+                  setReceiverDesignations("");
+                }}
+                styles={(theme) => ({
+                  label: {
+                    marginBottom: theme.spacing.xs,
+                  },
+                  input: {
+                    height: 36,
+                  },
+                })}
+              />
+            </Box>
           </Grid.Col>
+
           <Grid.Col span={{ base: 12, sm: 6 }}>
-            <Select
-              label="Receiver Designation"
-              placeholder="Select designation"
-              onClick={() => {
-                if (receiverRoles.length === 0) {
-                  fetchRoles();
-                }
-              }}
-              value={receiver_designation}
-              data={receiverRoles}
-              onChange={(value) => setReceiverDesignation(value)}
-              searchable
-              nothingFound="No designations found"
-            />
+            <Box style={{ height: "100%", width: "99%" }}>
+              <Select
+                key={receiver_username}
+                label="Receiver Designation"
+                placeholder="Select designation"
+                value={receiver_designation}
+                data={receiverRoles}
+                onChange={(value) => setReceiverDesignation(value)}
+                onClick={() => fetchRoles()} // only triggers on click
+                searchable
+                nothingFound="No designations found"
+                styles={(theme) => ({
+                  label: {
+                    marginBottom: theme.spacing.xs,
+                  },
+                  input: {
+                    height: 36,
+                  },
+                })}
+              />
+            </Box>
           </Grid.Col>
         </Grid>
+
         <Button
           type="submit"
           color="blue"

@@ -29,6 +29,7 @@ import {
   Question as HelpIcon,
   User as ProfileIcon,
   Gear as SettingsIcon,
+  AmazonLogo as CourseManagementIcon,
   CaretRight,
   CaretLeft,
 } from "@phosphor-icons/react";
@@ -43,9 +44,9 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
   const role = useSelector((state) => state.user.role);
 
   const deployedModules = [
-    "home",
-    "fts",
     "complaint_management",
+    "fts",
+    "home",
     "mess_management",
     "visitor_hostel",
     "hostel_management",
@@ -62,6 +63,8 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
     "course_registration",
     "examinations",
     "other_academics",
+    "hr",
+    "course_management",
   ];
 
   const Modules = [
@@ -71,7 +74,6 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
       icon: <HomeIcon size={18} />,
       url: "/dashboard",
     },
-    // { label: "Course Management", id:"course_management", icon: <OtherIcon size={18} />, url: "/" },
     {
       label: "Academics",
       id: "course_registration",
@@ -159,7 +161,7 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
       label: "Human Resource",
       id: "hr",
       icon: <HumanResourceIcon size={18} />,
-      url: "/",
+      url: "/hr",
     },
     {
       label: "Examination",
@@ -191,6 +193,12 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
       icon: <OtherAcademicIcon size={18} />,
       url: "/otherAcadProcedures",
     },
+    {
+      label: "Course Management",
+      id: "course_management",
+      icon: <CourseManagementIcon size={18} />,
+      url: "/course-management",
+    },
   ];
 
   const otherItems = [
@@ -217,7 +225,6 @@ function SidebarContent({ isCollapsed, toggleSidebar }) {
     const filterModules = Modules.filter(
       (module) => accessibleModules[module.id] || module.id === "home",
     );
-
     setFilteredModules(filterModules);
   }, [accessibleModules]);
 

@@ -22,7 +22,11 @@ function Transcript({ data, semester }) {
   return (
     <div className="transcript-container">
       {selectedStudent ? (
-        <StudentTranscript student={selectedStudent} semester={semester} onBack={handleBack} />
+        <StudentTranscript
+          student={selectedStudent}
+          semester={semester}
+          onBack={handleBack}
+        />
       ) : (
         <ScrollArea className="table-container">
           {students.length > 0 ? (

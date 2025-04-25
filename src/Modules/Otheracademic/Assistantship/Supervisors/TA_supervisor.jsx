@@ -174,47 +174,44 @@ export default function AssistantshipForm() {
       </div>
 
       <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
-  }}
->
-  <input
-    type="file"
-    name="signature"
-    accept=".png,.jpg,.jpeg"
-    onChange={handleFileChange}
-    required
-    style={{
-      backgroundColor: "#eff3f4",
-      border: "none",
-      padding: "10px",
-      fontSize: "16px",
-      borderRadius: "5px",
-      color: "#0f1010",
-    }}
-  />
-  <input
-    type="text"
-    name="applicability"
-    placeholder="Applicability"
-    value={formData.applicability}
-    onChange={handleChange}
-    required
-    style={{
-      backgroundColor: "#eff3f4",
-      border: "none",
-      padding: "10px",
-      fontSize: "16px",
-      borderRadius: "5px",
-      color: "#0f1010",
-    }}
-  />
-</div>
-
-
-  
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "20px",
+        }}
+      >
+        <input
+          type="file"
+          name="signature"
+          accept=".png,.jpg,.jpeg"
+          onChange={handleFileChange}
+          required
+          style={{
+            backgroundColor: "#eff3f4",
+            border: "none",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "5px",
+            color: "#0f1010",
+          }}
+        />
+        <input
+          type="text"
+          name="applicability"
+          placeholder="Applicability"
+          value={formData.applicability}
+          onChange={handleChange}
+          required
+          style={{
+            backgroundColor: "#eff3f4",
+            border: "none",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "5px",
+            color: "#0f1010",
+          }}
+        />
+      </div>
 
       <div
         style={{
@@ -271,7 +268,7 @@ export default function AssistantshipForm() {
           fontSize: "16px",
           borderRadius: "5px",
           color: "#0f1010",
-          width:"50%",
+          width: "50%",
         }}
       />
 

@@ -8,7 +8,7 @@ import {
   Container,
   Table,
   Grid,
-  Text
+  Text,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { fetchFacultyOutwardFilesData } from "../api/api";
@@ -25,9 +25,9 @@ function OutwardFile() {
     sender: "",
     receiver: "",
     fileId: "",
-    remarks: ""
+    remarks: "",
   });
-  
+
   const username = useSelector((state) => state.user.roll_no);
   const role = useSelector((state) => state.user.role);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -84,7 +84,7 @@ function OutwardFile() {
       alert("Failed to archive file");
     }
   };
-  
+
   const handleUnarchive = async (fileId, uname, designation) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -112,7 +112,7 @@ function OutwardFile() {
       alert("Failed to unarchive file");
     }
   };
-  
+
   useEffect(() => {
     const fetchOutwardFiles = async (uname, des) => {
       try {
@@ -145,7 +145,7 @@ function OutwardFile() {
     return data.filter((file) => {
       const sender = `${file.current_id}-${file.current_design}`;
       const receiver = `${file.receive_id__username}-${file.receive_design__name}`;
-      
+
       return (
         sender.toLowerCase().includes(filter.sender.toLowerCase()) &&
         receiver.toLowerCase().includes(filter.receiver.toLowerCase()) &&
@@ -174,7 +174,9 @@ function OutwardFile() {
             Outward Files
           </Button>
           <Button
-            variant={activeTab === "Finished OutwardFiles" ? "filled" : "outline"}
+            variant={
+              activeTab === "Finished OutwardFiles" ? "filled" : "outline"
+            }
             onClick={() => setActiveTab("Finished OutwardFiles")}
             style={{ marginRight: "10px" }}
           >
@@ -238,7 +240,7 @@ function OutwardFile() {
                       "File ID",
                       "Remarks",
                       "Forward Date",
-                      "Actions"
+                      "Actions",
                     ].map((header, index) => (
                       <th
                         key={index}
@@ -329,7 +331,11 @@ function OutwardFile() {
                           <Button
                             variant="filled"
                             color="blue"
-                            onClick={() => navigate(`/programme_curriculum/view_inward_file/?id=${file.id}`)}
+                            onClick={() =>
+                              navigate(
+                                `/programme_curriculum/view_inward_file/?id=${file.id}`,
+                              )
+                            }
                           >
                             View
                           </Button>

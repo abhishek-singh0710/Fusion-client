@@ -71,27 +71,27 @@ function StudentTranscript(props) {
 
       try {
         setLoading(true);
-        
+
         // Fetch both data sets in parallel
         const [courseResponse, transcriptResponse] = await Promise.all([
           axios.post(
-            get_courses, 
-            { Role:userRole, academic_year: "2024" },
-            { headers: { Authorization: `Token ${token}` }}
+            get_courses,
+            { Role: userRole, academic_year: "2024" },
+            { headers: { Authorization: `Token ${token}` } },
           ),
           axios.post(
-            generate_transcript, 
+            generate_transcript,
             { Role: userRole, student: student.id_id, semester },
-            { headers: { Authorization: `Token ${token}` }}
-          )
+            { headers: { Authorization: `Token ${token}` } },
+          ),
         ]);
-        
+
         const courses = courseResponse.data.courses;
         const transcript = transcriptResponse.data;
-        
+
         setCourseData(courses);
         setTranscriptData(transcript);
-        
+
         // Set a flag indicating both data sets are loaded
         setDataReady(true);
         setLoading(false);
@@ -123,12 +123,12 @@ function StudentTranscript(props) {
       // Find credit information for the course
       const courseInfo = courseData.find((c) => c.code === course.course_code);
       const credit = courseInfo?.credit || 3; // Default to 3 if not found
-      
+
       // Debug information
       creditsDebug.push({
         course_code: course.course_code,
         credit: credit,
-        found: !!courseInfo
+        found: !!courseInfo,
       });
 
       // Calculate grade points
@@ -137,12 +137,12 @@ function StudentTranscript(props) {
       totalGradePoints += gradePoint * credit;
       totalCredits += credit;
     });
-    
+
     console.log("Credits debugging info:", creditsDebug);
     console.log("Total grade points:", totalGradePoints);
     console.log("Total credits:", totalCredits);
     console.log("SPI calculation:", totalGradePoints / totalCredits);
-    
+
     const calculatedSPI =
       totalCredits > 0 ? (totalGradePoints / totalCredits).toFixed(2) : "N/A";
     setSpi(calculatedSPI);
@@ -160,12 +160,12 @@ function StudentTranscript(props) {
         // For CPI calculation, we need to find the course by ID
         const courseInfo = courseData.find((c) => c.id === course.course_id);
         const credit = courseInfo?.credit || 3;
-        
+
         // Debug information
         cpiDebug.push({
           course_id: course.course_id,
           credit: credit,
-          found: !!courseInfo
+          found: !!courseInfo,
         });
 
         // Calculate grade points
@@ -179,7 +179,7 @@ function StudentTranscript(props) {
       console.log("Total CPI grade points:", totalGradePointsCPI);
       console.log("Total CPI credits:", totalCreditsCPI);
       console.log("CPI calculation:", totalGradePointsCPI / totalCreditsCPI);
-      
+
       const calculatedCPI =
         totalCreditsCPI > 0
           ? (totalGradePointsCPI / totalCreditsCPI).toFixed(2)
@@ -208,7 +208,9 @@ function StudentTranscript(props) {
       Object.entries(transcriptData.courses_grades).forEach(
         ([courseId, course]) => {
           // Find credit information
-          const courseInfo = courseData?.find((c) => c.code === course.course_code);
+          const courseInfo = courseData?.find(
+            (c) => c.code === course.course_code,
+          );
           const credit = courseInfo?.credit || 3;
 
           const courseRow = [
@@ -250,14 +252,14 @@ function StudentTranscript(props) {
   if (error) {
     return (
       <Container size="md" py="xl">
-         <Button
-  leftIcon={<IconArrowLeft size={16} />} // Ensure this is correctly formatted
-  onClick={props.onBack}
-  variant="outline"
-  style={{ marginTop: "16px" }} // Add some margin for better spacing
->
-  Back to List
-</Button>
+        <Button
+          leftIcon={<IconArrowLeft size={16} />} // Ensure this is correctly formatted
+          onClick={props.onBack}
+          variant="outline"
+          style={{ marginTop: "16px" }} // Add some margin for better spacing
+        >
+          Back to List
+        </Button>
         <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red">
           {error}
         </Alert>
@@ -271,14 +273,14 @@ function StudentTranscript(props) {
   ) {
     return (
       <Container size="md" py="xl">
-          <Button
-  leftIcon={<IconArrowLeft size={16} />} // Ensure this is correctly formatted
-  onClick={props.onBack}
-  variant="outline"
-  style={{ marginTop: "16px" }} // Add some margin for better spacing
->
-  Back to List
-</Button>
+        <Button
+          leftIcon={<IconArrowLeft size={16} />} // Ensure this is correctly formatted
+          onClick={props.onBack}
+          variant="outline"
+          style={{ marginTop: "16px" }} // Add some margin for better spacing
+        >
+          Back to List
+        </Button>
         <Paper p="md" shadow="sm" radius="md">
           <Text size="lg" align="center">
             Marks not yet submitted.
@@ -290,14 +292,14 @@ function StudentTranscript(props) {
 
   return (
     <Container size="md" py="xl">
-       <Button
-  leftIcon={<IconArrowLeft size={16} />} // Ensure this is correctly formatted
-  onClick={props.onBack}
-  variant="outline"
-  style={{ marginTop: "16px" }} // Add some margin for better spacing
->
-  Back to List
-</Button>
+      <Button
+        leftIcon={<IconArrowLeft size={16} />} // Ensure this is correctly formatted
+        onClick={props.onBack}
+        variant="outline"
+        style={{ marginTop: "16px" }} // Add some margin for better spacing
+      >
+        Back to List
+      </Button>
       <Card shadow="sm" p="lg" radius="md" withBorder>
         <Card.Section withBorder inheritPadding py="xs">
           <Group position="apart">
@@ -349,7 +351,7 @@ function StudentTranscript(props) {
                 ([courseId, course], index) => {
                   // Find credit information
                   const courseInfo = courseData?.find(
-                    (c) => c.code === course.course_code
+                    (c) => c.code === course.course_code,
                   );
                   const credit = courseInfo?.credit || 3;
 

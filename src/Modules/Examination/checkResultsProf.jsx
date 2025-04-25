@@ -19,18 +19,26 @@ import {
   Box,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {get_courses_prof,download_grades_prof} from "./routes/examinationRoutes"
+import {
+  get_courses_prof,
+  download_grades_prof,
+} from "./routes/examinationRoutes";
 import axios from "axios";
 import { Alarm, Book, Calendar, Download } from "phosphor-react";
 import { useSelector } from "react-redux";
 function GradesDownloadPage() {
-    const [years, setYears] = useState([]);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
-    useEffect(() => {
-        const currentYear = new Date().getFullYear();
-        const generatedYears = Array.from({ length: currentYear - 2021 + 1 }, (_, i) => (currentYear - i).toString());
-        setYears(generatedYears);
-      }, []);
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString(),
+  );
+  useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    const generatedYears = Array.from(
+      { length: currentYear - 2021 + 1 },
+      (_, i) => (currentYear - i).toString(),
+    );
+    setYears(generatedYears);
+  }, []);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -212,7 +220,7 @@ function GradesDownloadPage() {
                 </Title>
                 <Select
                   placeholder="Select Academic Year"
-                //   label="Academic Year"
+                  //   label="Academic Year"
                   icon={<Calendar size={16} />}
                   value={selectedYear}
                   onChange={handleYearChange}
